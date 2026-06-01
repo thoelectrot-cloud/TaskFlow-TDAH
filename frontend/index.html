@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow - Project Management Matrix</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="login-screen-wrapper" id="login-viewport-wall">
+      <div class="login-card">
+        <div class="login-brand-header">
+          <div class="taskflow-logo-asset">
+            <span class="pill-top"></span>
+            <span class="pill-mid"></span>
+            <span class="dot-bot"></span>
+          </div>
+          <h1 class="brand-title">TaskFlow</h1>
+        </div>
+
+        <div class="login-headline-group">
+          <h2>Welcome Back</h2>
+          <p>Manage your WorkFlow and track progress</p>
+        </div>
+
+        <form id="app-auth-form">
+          <div class="form-input-field-group">
+            <label for="auth-email">Email Address</label>
+            <div class="input-icon-frame">
+              <i class="fa-regular fa-envelope field-prefix-icon"></i>
+              <input
+                type="email"
+                id="auth-email"
+                placeholder="name@company.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-input-field-group">
+            <div class="label-split-row">
+              <label for="auth-password">Password</label>
+              <a href="#" class="inline-recovery-link">Forgot Password?</a>
+            </div>
+            <div class="input-icon-frame">
+              <i class="fa-solid fa-lock field-prefix-icon"></i>
+              <input
+                type="password"
+                id="auth-password"
+                placeholder="Enter your password"
+                required
+              />
+              <button
+                type="button"
+                class="password-eye-visibility-toggle"
+                id="password-visibility-trigger"
+              >
+                <i class="fa-regular fa-eye-slash"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary-lime-submit">
+            <span>Sign In</span>
+            <i
+              class="fa-solid fa-right-to-bracket-icon fa-bars-progress"
+              style="font-size: 0.9rem; margin-left: 4px"
+            ></i>
+          </button>
+        </form>
+
+        <div class="auth-center-divider">
+          <span>OR CONTINUE WITH</span>
+        </div>
+
+        <div class="auth-social-row-grid">
+          <button type="button" class="btn-social-outline-card">
+            <i class="fa-brands fa-google"></i>
+            <span>Google</span>
+          </button>
+          <button type="button" class="btn-social-outline-card">
+            <i class="fa-brands fa-apple"></i>
+            <span>Apple</span>
+          </button>
+        </div>
+
+        <div class="auth-card-footer-layout">
+          <p>
+            Don't have an account?
+            <a href="#" class="inline-register-trigger">Sign Up</a>
+          </p>
+          <div class="footer-decorative-logos-row">
+            <i class="fa-solid fa-chart-simple"></i>
+            <i class="fa-solid fa-window-maximize"></i>
+            <i class="fa-regular fa-calendar"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="dashboard-application-matrix hidden"
+      id="main-application-workspace"
+    >
+      <aside class="app-sidebar-navigation-panel">
+        <div class="sidebar-identity-branding">
+          <div class="taskflow-logo-asset structural-scaled">
+            <span class="pill-top"></span>
+            <span class="pill-mid"></span>
+            <span class="dot-bot"></span>
+          </div>
+          <h2>TaskFlow</h2>
+        </div>
+
+        <nav class="sidebar-links-group-menu">
+          <a
+            href="#"
+            class="sidebar-nav-item-link active"
+            data-navigation-target="kanban-workflow-panel"
+          >
+            <i class="fa-solid fa-table-columns"></i>
+            <span>Kanban WorkFlow</span>
+          </a>
+          <a
+            href="#"
+            class="sidebar-nav-item-link"
+            data-navigation-target="my-tasks-dashboard-panel"
+          >
+            <i class="fa-solid fa-layer-group"></i>
+            <span>My Tasks</span>
+          </a>
+          <a
+            href="#"
+            class="sidebar-nav-item-link"
+            data-navigation-target="daily-flow-calendar-panel"
+          >
+            <i class="fa-regular fa-calendar-days"></i>
+            <span>My Schedule</span>
+          </a>
+          <a
+            href="#"
+            class="sidebar-nav-item-link"
+            data-navigation-target="team-placeholder-view"
+          >
+            <i class="fa-solid fa-user-group"></i>
+            <span>Team</span>
+          </a>
+          <a
+            href="#"
+            class="sidebar-nav-item-link"
+            data-navigation-target="settings-placeholder-view"
+          >
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer-controls">
+          <div class="dark-mode-toggle-interactive-row">
+            <span class="label-mode-text">Dark Mode</span>
+            <button
+              type="button"
+              class="ui-darkmode-toggle"
+              id="darkmode-switch-node"
+            >
+              <i class="fa-solid fa-circle-half-stroke"></i>
+            </button>
+          </div>
+
+          <div
+            class="sidebar-active-profile-card"
+            id="logout-interactive-anchor"
+          >
+            <div class="profile-meta-left-group">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100"
+                alt="Doha Profile Avatar"
+                class="profile-avatar-circle-thumbnail"
+              />
+              <div class="user-identity-text-stack">
+                <span class="u-name">Doha</span>
+                <span class="u-role">UX/UI Designer</span>
+              </div>
+            </div>
+            <i
+              class="fa-solid fa-right-from-bracket session-logout-door-icon"
+            ></i>
+          </div>
+        </div>
+      </aside>
+
+      <main class="app-central-workspace-viewport">
+        <header class="workspace-top-bar-global">
+          <div class="search-input-wrapper-box">
+            <i class="fa-solid fa-magnifying-glass search-leading-icon"></i>
+            <input type="text" placeholder="Search tasks..." />
+          </div>
+          <div class="top-bar-right-actions-cluster">
+            <button
+              type="button"
+              class="bell-notification-trigger-btn active-unread"
+            >
+              <i class="fa-regular fa-bell"></i>
+            </button>
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100"
+              alt="Avatar Thumbnail"
+              class="profile-avatar-circle-thumbnail navbar-avatar"
+            />
+            <button
+              type="button"
+              class="btn-lime-accent-action global-add-task-modal-trigger"
+            >
+              <i class="fa-solid fa-plus-minus fa-plus"></i>
+              <span>Add task</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="panels-router-viewspace-scrollable">
+          <section
+            id="kanban-workflow-panel"
+            class="workspace-routed-view-panel-node active"
+          >
+            <div class="panel-section-title-header">
+              <h1>Kanban WorkFlow</h1>
+              <p>Manage your WorkFlow and track progress</p>
+            </div>
+
+            <div class="kanban-board-flex-columns-matrix">
+              <div class="kanban-board-vertical-column">
+                <div class="kanban-column-header-row">
+                  <span class="column-title">To Do</span>
+                </div>
+                <div
+                  class="kanban-cards-vertical-stack-dropzone"
+                  id="stack-todo-cards"
+                >
+                  <div class="kanban-task-card-item">
+                    <div class="card-tag-wrapper ux-ui">UX/UI</div>
+                    <h3 class="card-task-title-text">Design login page</h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100"
+                          alt="Doha"
+                        />
+                        <span>Doha</span>
+                      </div>
+                      <span class="card-timestamp-date">May 20</span>
+                    </div>
+                  </div>
+                  <div class="kanban-task-card-item">
+                    <div class="card-tag-wrapper backend">Backend</div>
+                    <h3 class="card-task-title-text">Setup Flask project</h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100"
+                          alt="Taha"
+                        />
+                        <span>Taha</span>
+                      </div>
+                      <span class="card-timestamp-date">May 20</span>
+                    </div>
+                  </div>
+                  <div class="kanban-task-card-item">
+                    <div class="card-tag-wrapper backend">Backend</div>
+                    <h3 class="card-task-title-text">
+                      Created database schema
+                    </h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100"
+                          alt="Ayoub"
+                        />
+                        <span>Ayoub</span>
+                      </div>
+                      <span class="card-timestamp-date">May 20</span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn-column-embedded-add-task global-add-task-modal-trigger"
+                >
+                  <i class="fa-solid fa-plus"></i> <span>Add Task</span>
+                </button>
+              </div>
+
+              <div class="kanban-board-vertical-column in-progress-tint-accent">
+                <div class="kanban-column-header-row">
+                  <span class="column-title">In Progress</span>
+                </div>
+                <div
+                  class="kanban-cards-vertical-stack-dropzone"
+                  id="stack-inprogress-cards"
+                >
+                  <div class="kanban-task-card-item">
+                    <div class="card-tag-wrapper ux-ui">UX/UI</div>
+                    <h3 class="card-task-title-text">Design Kanban</h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100"
+                          alt="Doha"
+                        />
+                        <span>Doha</span>
+                      </div>
+                      <span class="card-timestamp-date">May 20</span>
+                    </div>
+                  </div>
+                  <div class="kanban-task-card-item">
+                    <div class="card-tag-wrapper backend">Backend</div>
+                    <h3 class="card-task-title-text">Implement task CRUD</h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100"
+                          alt="Taha"
+                        />
+                        <span>Taha</span>
+                      </div>
+                      <span class="card-timestamp-date">May 20</span>
+                    </div>
+                  </div>
+                  <div class="kanban-task-card-item">
+                    <div class="card-tag-wrapper bug-tag">Bug</div>
+                    <h3 class="card-task-title-text">Fix task status bug</h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100"
+                          alt="Hamza"
+                        />
+                        <span>Hamza</span>
+                      </div>
+                      <span class="card-timestamp-date">May 20</span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn-column-embedded-add-task global-add-task-modal-trigger"
+                >
+                  <i class="fa-solid fa-plus"></i> <span>Add Task</span>
+                </button>
+              </div>
+
+              <div class="kanban-board-vertical-column done-tint-accent">
+                <div class="kanban-column-header-row">
+                  <span class="column-title">Done</span>
+                </div>
+                <div
+                  class="kanban-cards-vertical-stack-dropzone"
+                  id="stack-done-cards"
+                >
+                  <div class="kanban-task-card-item checked-completed-state">
+                    <div class="card-tag-wrapper ux-ui">UX/UI</div>
+                    <h3 class="card-task-title-text">Create Wireframes</h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100"
+                          alt="Doha"
+                        />
+                        <span>Doha</span>
+                      </div>
+                      <div class="completion-check-badge-circle">
+                        <i class="fa-solid fa-check"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="kanban-task-card-item checked-completed-state">
+                    <div class="card-tag-wrapper backend">Backend</div>
+                    <h3 class="card-task-title-text">User authentication</h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100"
+                          alt="Taha"
+                        />
+                        <span>Taha</span>
+                      </div>
+                      <div class="completion-check-badge-circle">
+                        <i class="fa-solid fa-check"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="kanban-task-card-item checked-completed-state">
+                    <div class="card-tag-wrapper backend">Backend</div>
+                    <h3 class="card-task-title-text">
+                      Project structure setup
+                    </h3>
+                    <div class="card-footer-assignment-meta-row">
+                      <div class="assignee-identity-badge">
+                        <img
+                          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100"
+                          alt="Ayoub"
+                        />
+                        <span>Ayoub</span>
+                      </div>
+                      <div class="completion-check-badge-circle">
+                        <i class="fa-solid fa-check"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn-column-embedded-add-task global-add-task-modal-trigger"
+                >
+                  <i class="fa-solid fa-plus"></i> <span>Add Task</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="my-tasks-dashboard-panel"
+            class="workspace-routed-view-panel-node"
+          >
+            <div class="panel-section-title-header padding-zero-x">
+              <h1>My tasks</h1>
+              <p class="greeting-text-line">
+                Good morning, Doha <span class="wave-emoji-icon">👋</span>
+              </p>
+            </div>
+
+            <div class="dashboard-metrics-grid-four-columns">
+              <div class="metric-card-box">
+                <div class="metric-header-row">
+                  <div class="icon-square-avatar blue-tint">
+                    <i class="fa-solid fa-list-check"></i>
+                  </div>
+                  <span class="percentage-pill positive-growth">+12%</span>
+                </div>
+                <span class="metric-count-value">42</span>
+                <span class="metric-label-title">Active Tasks</span>
+              </div>
+              <div class="metric-card-box">
+                <div class="metric-header-row">
+                  <div class="icon-square-avatar purple-tint">
+                    <i class="fa-solid fa-rotate"></i>
+                  </div>
+                  <span class="percentage-pill static-state">Updated</span>
+                </div>
+                <span class="metric-count-value">18</span>
+                <span class="metric-label-title">In Progress</span>
+              </div>
+              <div class="metric-card-box">
+                <div class="metric-header-row">
+                  <div class="icon-square-avatar green-tint">
+                    <i class="fa-solid fa-circle-check"></i>
+                  </div>
+                  <span class="percentage-pill context-timeline">All time</span>
+                </div>
+                <span class="metric-count-value">1,284</span>
+                <span class="metric-label-title">Completed</span>
+              </div>
+              <div class="metric-card-box">
+                <div class="metric-header-row">
+                  <div class="icon-square-avatar orange-tint">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </div>
+                  <span class="percentage-pill alert-critical">Urgent</span>
+                </div>
+                <span class="metric-count-value">05</span>
+                <span class="metric-label-title">Overdue</span>
+              </div>
+            </div>
+
+            <div class="dashboard-split-twin-layout-panels">
+              <div class="dashboard-content-card-panel">
+                <h2 class="card-panel-heading-title">Today's tasks</h2>
+                <div class="dashboard-list-items-vertical-stack">
+                  <div class="list-row-task-item">
+                    <div class="list-item-left-content">
+                      <i class="fa-solid fa-list-check item-bullet-ico"></i>
+                      <span>Design homepage UI</span>
+                    </div>
+                    <div class="card-tag-wrapper ux-ui text-scaled-down">
+                      UX/UI
+                    </div>
+                  </div>
+                  <div class="list-row-task-item">
+                    <div class="list-item-left-content">
+                      <i class="fa-solid fa-list-check item-bullet-ico"></i>
+                      <span>Fix login bug</span>
+                    </div>
+                    <div class="card-tag-wrapper bug-tag text-scaled-down">
+                      Bug
+                    </div>
+                  </div>
+                  <div class="list-row-task-item">
+                    <div class="list-item-left-content">
+                      <i class="fa-solid fa-list-check item-bullet-ico"></i>
+                      <span>Team meeting</span>
+                    </div>
+                    <div class="card-tag-wrapper meeting-tag text-scaled-down">
+                      Meeting
+                    </div>
+                  </div>
+                  <div class="list-row-task-item">
+                    <div class="list-item-left-content">
+                      <i class="fa-solid fa-list-check item-bullet-ico"></i>
+                      <span>Review pull request</span>
+                    </div>
+                    <div class="card-tag-wrapper backend text-scaled-down">
+                      Backend
+                    </div>
+                  </div>
+                  <div class="list-row-task-item">
+                    <div class="list-item-left-content">
+                      <i class="fa-solid fa-list-check item-bullet-ico"></i>
+                      <span>Prepare presentation</span>
+                    </div>
+                    <div class="card-tag-wrapper backend text-scaled-down">
+                      Backend
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="dashboard-content-card-panel align-items-center-flex flex-column-layout"
+              >
+                <h2 class="card-panel-heading-title align-self-start">
+                  Task Progress
+                </h2>
+                <div class="svg-radial-progress-chart-container-box">
+                  <svg class="circular-chart-element-frame" viewBox="0 0 36 36">
+                    <path
+                      class="circle-bg-track"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      class="circle-fill-progress-indicator"
+                      stroke-dasharray="80, 100"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                  <div class="radial-center-text-stack-absolute">
+                    <span class="big-percentage-num">80%</span>
+                    <span class="sub-radial-label">Overall progress</span>
+                  </div>
+                </div>
+                <div class="radial-chart-legend-labels-vertical-rows">
+                  <div class="legend-row-item">
+                    <span class="bullet-dot green-dot"></span>
+                    <span class="label-txt">Completed</span>
+                  </div>
+                  <div class="legend-row-item">
+                    <span class="bullet-dot orange-dot"></span>
+                    <span class="label-txt">In Progress</span>
+                  </div>
+                  <div class="legend-row-item">
+                    <span class="bullet-dot red-dot"></span>
+                    <span class="label-txt">Overdue</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="daily-flow-calendar-panel"
+            class="workspace-routed-view-panel-node"
+          >
+            <div
+              class="panel-section-title-header position-relative padding-zero-x"
+            >
+              <h1>Daily Flow</h1>
+
+              <div class="calendar-navigation-filters-strip">
+                <button
+                  type="button"
+                  class="btn-lime-accent-action micro-size global-add-event-modal-trigger"
+                >
+                  <i class="fa-solid fa-plus"></i> <span>New Event</span>
+                </button>
+                <div class="segmented-pills-selector-group">
+                  <button type="button" class="pill-btn active">Month</button>
+                  <button type="button" class="pill-btn">Week</button>
+                  <button type="button" class="pill-btn">Day</button>
+                </div>
+                <div class="calendar-month-year-switcher-cluster">
+                  <button type="button" class="arrow-nav-btn">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <span class="active-month-string-heading">May 2026</span>
+                  <button type="button" class="arrow-nav-btn">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+                <button type="button" class="btn-outline-action-today">
+                  Today
+                </button>
+              </div>
+            </div>
+
+            <div class="calendar-grid-wrapper-box-surface">
+              <div class="calendar-days-header-seven-columns-grid">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+              </div>
+              <div class="calendar-dates-cells-blocks-matrix-mesh">
+                <div class="date-cell disabled-out-range">
+                  <span class="day-number-label">31</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">1</span>
+                  <div class="calendar-event-pill event-blue">Team Meeting</div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">2</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">3</span>
+                  <div class="calendar-event-pill event-green">
+                    Project Review
+                  </div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">4</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">5</span>
+                  <div class="calendar-event-pill event-purple">
+                    Design Sprint
+                  </div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">6</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">7</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">8</span>
+                  <div class="calendar-event-pill event-orange">
+                    Client Call
+                  </div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">9</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">10</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">11</span>
+                  <div class="calendar-event-pill event-red">Deadline</div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">12</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">13</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">14</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">15</span>
+                  <div class="calendar-event-pill event-blue">Stand-up</div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">16</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">17</span>
+                </div>
+                <div class="date-cell active-current-today-highlight-box">
+                  <span class="day-number-label">18</span>
+                  <div class="calendar-event-pill event-green">Workshop</div>
+                  <div class="calendar-event-pill event-blue">1:1 Meeting</div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">19</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">20</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">21</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">22</span>
+                  <div class="calendar-event-pill event-purple">
+                    Code Review
+                  </div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">23</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">24</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">25</span>
+                  <div class="calendar-event-pill event-orange">Launch Day</div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">26</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">27</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">28</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">29</span>
+                  <div class="calendar-event-pill event-green">
+                    Retrospective
+                  </div>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">30</span>
+                </div>
+                <div class="date-cell">
+                  <span class="day-number-label">31</span>
+                </div>
+                <div class="date-cell disabled-out-range">
+                  <span class="day-number-label">1</span>
+                </div>
+                <div class="date-cell disabled-out-range">
+                  <span class="day-number-label">2</span>
+                </div>
+                <div class="date-cell disabled-out-range">
+                  <span class="day-number-label">3</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="floating-quick-add-event-fab-btn global-add-event-modal-trigger"
+              >
+                <i class="fa-solid fa-plus"></i>
+                <span>Quick Add</span>
+              </button>
+            </div>
+          </section>
+
+          <section
+            id="team-placeholder-view"
+            class="workspace-routed-view-panel-node"
+          >
+            <div class="panel-section-title-header padding-zero-x">
+              <h1>Team Control Matrix</h1>
+              <p>
+                Team members directory configuration panels are placed here.
+              </p>
+            </div>
+          </section>
+          <section
+            id="settings-placeholder-view"
+            class="workspace-routed-view-panel-node"
+          >
+            <div class="panel-section-title-header padding-zero-x">
+              <h1>System Workspace Settings</h1>
+              <p>Configure layouts styles theme parameters overrides here.</p>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div
+      class="modal-system-overlay-backdrop hidden"
+      id="modal-container-add-task"
+    >
+      <div class="modal-dialog-box-surface-card size-standard">
+        <button
+          type="button"
+          class="modal-close-dismiss-absolute-x-btn modal-close-trigger-node"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h2 class="modal-header-heading-title">Add New Task</h2>
+        <form id="form-submit-node-add-task">
+          <div class="modal-form-row-group">
+            <label for="task-title-input">Title</label>
+            <input
+              type="text"
+              id="task-title-input"
+              placeholder="e.g. Create a landing page"
+              required
+            />
+          </div>
+          <div class="modal-form-row-group">
+            <label for="task-desc-input">Description</label>
+            <textarea
+              id="task-desc-input"
+              rows="3"
+              placeholder="Add more details about this task..."
+            ></textarea>
+          </div>
+          <div class="modal-form-two-columns-split-fields">
+            <div class="modal-form-row-group">
+              <label for="task-assignee-select">Assign to</label>
+              <select id="task-assignee-select">
+                <option value="" disabled selected hidden>
+                  Select a member
+                </option>
+                <option value="Doha">Doha (UX/UI)</option>
+                <option value="Taha">Taha (Backend)</option>
+                <option value="Ayoub">Ayoub (Backend)</option>
+                <option value="Hamza">Hamza (Bug Hunter)</option>
+              </select>
+            </div>
+            <div class="modal-form-row-group">
+              <label for="task-date-input">Due date</label>
+              <input type="date" id="task-date-input" />
+            </div>
+          </div>
+          <div class="modal-footer-action-buttons-row">
+            <button
+              type="button"
+              class="btn-dialog-footer-secondary modal-close-trigger-node"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-dialog-footer-primary-lime">
+              Create task
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      class="modal-system-overlay-backdrop hidden"
+      id="modal-container-add-event"
+    >
+      <div class="modal-dialog-box-surface-card size-wide">
+        <form id="form-submit-node-add-event">
+          <div class="modal-form-row-group border-bottom-focus-field">
+            <label class="uppercase-micro-label">Event Title</label>
+            <input
+              type="text"
+              id="event-title-input"
+              class="large-headless-input-text"
+              placeholder="e.g. Weekly Team Sync"
+              required
+            />
+          </div>
+          <div class="modal-form-row-group">
+            <label class="uppercase-micro-label">Description</label>
+            <textarea
+              id="event-desc-input"
+              rows="2"
+              placeholder="Provide more details about this event..."
+            ></textarea>
+          </div>
+          <div class="modal-form-two-columns-split-fields">
+            <div class="modal-form-row-group">
+              <label class="uppercase-micro-label">Location</label>
+              <select id="event-location-select">
+                <option value="Conference Room A">Conference Room A</option>
+                <option value="Meeting Room B">Meeting Room B</option>
+                <option value="Discord Channel">
+                  Discord Virtual Workspace
+                </option>
+              </select>
+            </div>
+            <div class="modal-form-row-group">
+              <label class="uppercase-micro-label">Event Type</label>
+              <select id="event-type-select">
+                <option value="Internal Meeting">Internal Meeting</option>
+                <option value="Client Presentation">Client Review Sync</option>
+                <option value="Design Review">Design Critique Sprint</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-form-two-columns-split-fields">
+            <div class="modal-form-row-group">
+              <label class="uppercase-micro-label">Attendees</label>
+              <div class="attendees-avatar-picker-mock-row">
+                <div class="avatar-stack-imgs-row">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100"
+                    alt="User 1"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100"
+                    alt="User 2"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100"
+                    alt="User 3"
+                  />
+                </div>
+                <button type="button" class="btn-circle-add-avatar-placeholder">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+                <span class="avatar-row-helper-lbl">Select teammates</span>
+              </div>
+            </div>
+            <div class="modal-form-row-group">
+              <label class="uppercase-micro-label">Event Date</label>
+              <input type="date" id="event-date-input" value="2026-05-22" />
+            </div>
+          </div>
+          <div class="modal-form-row-group">
+            <label class="uppercase-micro-label">Reminder</label>
+            <div class="segmented-reminder-strip-buttons-mesh">
+              <input
+                type="radio"
+                name="reminder-option"
+                id="rem-none"
+                value="None"
+                checked
+                hidden
+              />
+              <label for="rem-none" class="segment-radio-label-pill"
+                >None</label
+              >
+
+              <input
+                type="radio"
+                name="reminder-option"
+                id="rem-15"
+                value="15 min before"
+                hidden
+              />
+              <label for="rem-15" class="segment-radio-label-pill"
+                >15 min before</label
+              >
+
+              <input
+                type="radio"
+                name="reminder-option"
+                id="rem-1"
+                value="1 hour before"
+                hidden
+              />
+              <label for="rem-1" class="segment-radio-label-pill"
+                >1 hour before</label
+              >
+            </div>
+          </div>
+          <div class="modal-footer-action-buttons-row margin-top-large">
+            <button
+              type="submit"
+              class="btn-dialog-footer-primary-lime wide-flex-layout-btn"
+            >
+              <i
+                class="fa-solid fa-plus-minus fa-plus"
+                style="font-size: 0.85rem"
+              ></i>
+              <span>Add Event</span>
+            </button>
+            <button
+              type="button"
+              class="btn-dialog-footer-secondary modal-close-trigger-node wide-flex-layout-btn"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
