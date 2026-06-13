@@ -1531,3 +1531,374 @@ body.dark-mode-activated .segmented-reminder-strip-buttons-mesh {
   .dashboard-metrics-grid-four-columns { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
   .dashboard-split-twin-layout-panels { grid-template-columns: 1fr !important; gap: 16px; }
 }
+/* team-design */
+/* cards*/
+.figma-team-card-container {
+    background-color: var(--card-surface-pure-white);
+    border: 1px solid var(--border-line-color);
+    border-radius: 12px;
+    padding: 24px;
+    width: 100%;
+    max-width: 540px; /* Dashboard */
+    margin-top: 24px;
+    box-sizing: border-box;
+    font-family: var(--font-family-sans-stack);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.figma-team-card-header {
+    margin-bottom: 20px;
+}
+
+.figma-team-card-header h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-color-main-dark);
+    margin: 0 0 4px 0;
+}
+
+.figma-team-card-header p {
+    font-size: 0.84rem;
+    color: var(--text-color-sub-gray);
+    margin: 0;
+}
+
+/* all-liste*/
+.figma-team-list-stack {
+    display: flex;
+    flex-direction: column;
+}
+
+.figma-team-row-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-line-color);
+}
+
+.figma-team-row-item:last-child {
+    border-bottom: none;
+    padding-bottom: 24px;
+}
+
+/* img and texts*/
+.figma-team-profile-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* img-circle*/
+.figma-team-avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--input-field-bg-color);
+}
+
+/* mission-member*/
+.figma-team-text-meta h3 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-color-main-dark);
+    margin: 0 0 2px 0;
+    line-height: 1.2;
+}
+
+.figma-team-text-meta p {
+    font-size: 0.8rem;
+    color: var(--text-color-sub-gray);
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* active -btn*/
+.figma-team-status-badge {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--lime-brand-darker-text);
+    background-color: rgba(143, 164, 56, 0.12);
+    padding: 4px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.2px;
+}
+
+/* btn-border*/
+.figma-team-footer-centered-zone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 4px;
+}
+
+/* btn*/
+.figma-btn-prime-lime {
+    background-color: var(--lime-brand-accent-color);
+    color: #000000;
+    font-family: var(--font-family-sans-stack);
+    font-size: 0.88rem;
+    font-weight: 700;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.figma-btn-prime-lime:hover {
+    filter: brightness(0.96);
+}
+
+.figma-btn-prime-lime:active {
+    transform: scale(0.98);
+}
+/* Base Layout Reset adaptation inside your wrapper - settings design*/
+#settings-placeholder-view {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #000000;
+  padding: 20px;
+}
+
+.panel-section-title-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #111;
+}
+
+.panel-section-title-header p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+/* Card Container Box */
+.settings-card-container {
+  width: 100%;
+  max-width: 850px;
+  background-color: #f3f3f3;
+  border: 1px solid #dcdcdc;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+/* Top Navigation Tabs */
+.tab-navigation-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: #cbd0d3; /* Background color of the navigation bar */
+  padding: 5px;
+  border-radius: 30px;
+  margin-bottom: 28px;
+}
+
+.tab-item-btn {
+  background: none;
+  border: none;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.tab-item-btn .icon {
+  font-size: 16px;
+}
+
+.tab-item-btn.active {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Views Control */
+.settings-view-panel {
+  display: none;
+}
+
+.settings-view-panel.active {
+  display: block;
+}
+
+/* View Headings */
+.view-panel-header {
+  margin-bottom: 24px;
+}
+
+.view-panel-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+.view-panel-header p {
+  font-size: 14px;
+  color: #666666;
+}
+
+/* Input Styles */
+.form-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-field-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field-group label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.form-field-group input {
+  width: 100%;
+  background-color: #dbdbdb; /* Light grey input from screenshot */
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 15px;
+  color: #222;
+  outline: none;
+  font-weight: 500;
+}
+
+/* Action Buttons */
+.form-actions-area {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  border-top: 1px solid #dcdcdc;
+  padding-top: 20px;
+}
+
+.form-actions-area.no-border {
+  border-top: none;
+  padding-top: 0;
+}
+
+.action-btn {
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+  opacity: 0.9;
+}
+
+.btn-primary {
+  background-color: #def877; /* Lime/green button color */
+  color: #000000;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  color: #000000;
+}
+
+.btn-small {
+  padding: 10px 20px;
+}
+
+/* Custom Notification Toggle Switches */
+.toggle-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.toggle-item-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.toggle-item-info p {
+  font-size: 13px;
+  color: #666;
+}
+
+.custom-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 26px;
+}
+
+.custom-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .2s;
+  border-radius: 30px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .2s;
+  border-radius: 50%;
+}
+
+.custom-toggle-switch input:checked + .toggle-slider {
+  background-color: #000000; /* Dark/Black switch style when active */
+}
+
+.custom-toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Inline Security section */
+.inline-security-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #dcdcdc;
+  margin-bottom: 24px;
+}
+
+
+
+
+
+
+

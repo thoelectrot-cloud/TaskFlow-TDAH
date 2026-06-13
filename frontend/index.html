@@ -758,27 +758,251 @@
               </button>
             </div>
           </section>
+           <!-- team -->
+          <section id="team-placeholder-view" class="workspace-routed-view-panel-node">
+    
+    <div class="panel-section-title-header padding-zero-x">
+      <h1>Team Control Matrix</h1>
+      <p>Team members directory configuration panels are placed here.</p>
+    </div>
 
-          <section
-            id="team-placeholder-view"
-            class="workspace-routed-view-panel-node"
-          >
-            <div class="panel-section-title-header padding-zero-x">
-              <h1>Team Control Matrix</h1>
-              <p>
-                Team members directory configuration panels are placed here.
-              </p>
+    <div class="figma-team-card-container">
+        
+        <div class="figma-team-card-header">
+            <h2>Team Members</h2>
+            <p>View and manage your team</p>
+        </div>
+
+        <div class="figma-team-list-stack">
+            
+            <div class="figma-team-row-item">
+                <div class="figma-team-profile-identity">
+                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100" alt="You" class="figma-team-avatar-img">
+                    <div class="figma-team-text-meta">
+                        <h3>You</h3>
+                        <p>UX/UI Designer</p>
+                    </div>
+                </div>
+                <span class="figma-team-status-badge">Active</span>
             </div>
-          </section>
-          <section
-            id="settings-placeholder-view"
-            class="workspace-routed-view-panel-node"
-          >
-            <div class="panel-section-title-header padding-zero-x">
-              <h1>System Workspace Settings</h1>
-              <p>Configure layouts styles theme parameters overrides here.</p>
+
+            <div class="figma-team-row-item">
+                <div class="figma-team-profile-identity">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" alt="Taha" class="figma-team-avatar-img">
+                    <div class="figma-team-text-meta">
+                        <h3>Taha</h3>
+                        <p>Dev Backend</p>
+                    </div>
+                </div>
+                <span class="figma-team-status-badge">Active</span>
             </div>
-          </section>
+
+            <div class="figma-team-row-item">
+                <div class="figma-team-profile-identity">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100" alt="Ayoub" class="figma-team-avatar-img">
+                    <div class="figma-team-text-meta">
+                        <h3>Ayoub</h3>
+                        <p>Dev Frontend</p>
+                    </div>
+                </div>
+                <span class="figma-team-status-badge">Active</span>
+            </div>
+
+            <div class="figma-team-row-item">
+                <div class="figma-team-profile-identity">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" alt="Hamza" class="figma-team-avatar-img">
+                    <div class="figma-team-text-meta">
+                        <h3>Hamza</h3>
+                        <p>Tests & Integration</p>
+                    </div>
+                </div>
+                <span class="figma-team-status-badge">Active</span>
+            </div>
+
+        </div>
+
+        <div class="figma-team-footer-centered-zone">
+            <button type="button" class="figma-btn-prime-lime">Add Member</button>
+        </div>
+
+    </div>
+</section>
+<!-- settings -->
+          <section id="settings-placeholder-view" class="workspace-routed-view-panel-node">
+  <div class="panel-section-title-header padding-zero-x">
+    <h1>System Workspace Settings</h1>
+    <p>Configure layouts styles theme parameters overrides here.</p>
+  </div>
+
+  <div class="settings-card-container">
+    
+    <nav class="tab-navigation-bar">
+      <button class="tab-item-btn active" onclick="switchSettingsTab(event, 'profile-panel')">
+        <span class="icon">👤</span> Profile
+      </button>
+      <button class="tab-item-btn" onclick="switchSettingsTab(event, 'notifications-panel')">
+        <span class="icon">🕭</span> Notifications
+      </button>
+      <button class="tab-item-btn" onclick="switchSettingsTab(event, 'security-panel')">
+        <span class="icon">🛡️</span> Security
+      </button>
+      <button class="tab-item-btn" onclick="switchSettingsTab(event, 'language-panel')">
+        <span class="icon">🌐</span> Language
+      </button>
+    </nav>
+
+    <div id="profile-panel" class="settings-view-panel active">
+      <div class="view-panel-header">
+        <h2>Profile Information</h2>
+        <p>Update your personal information and profile details</p>
+      </div>
+      <form onsubmit="event.preventDefault();">
+        <div class="form-grid-row">
+          <div class="form-field-group">
+            <label>First Name</label>
+            <input type="text">
+          </div>
+          <div class="form-field-group">
+            <label>Last Name</label>
+            <input type="text" >
+          </div>
+        </div>
+        <div class="form-field-group">
+          <label>Email</label>
+          <input type="email" >
+        </div>
+        <div class="form-field-group">
+          <label>Bio</label>
+          <input type="text">
+        </div>
+        <div class="form-actions-area">
+          <button type="button" class="action-btn btn-secondary">Cancel</button>
+          <button type="submit" class="action-btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="notifications-panel" class="settings-view-panel">
+      <div class="view-panel-header">
+        <h2>Notification Preferences</h2>
+        <p>Manage how you receive notifications</p>
+      </div>
+      <div class="toggle-items-list">
+        <div class="toggle-row-item">
+          <div class="toggle-item-info">
+            <h3>Email Notifications</h3>
+            <p>Receive notifications via email</p>
+          </div>
+          <label class="custom-toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row-item">
+          <div class="toggle-item-info">
+            <h3>Push Notifications</h3>
+            <p>Receive push notifications on your device</p>
+          </div>
+          <label class="custom-toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row-item">
+          <div class="toggle-item-info">
+            <h3>Task Reminders</h3>
+            <p>Get reminders for upcoming tasks</p>
+          </div>
+          <label class="custom-toggle-switch">
+            <input type="checkbox" checked>
+            <span class="slider toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row-item">
+          <div class="toggle-item-info">
+            <h3>Weekly Digest</h3>
+            <p>Receive a weekly summary of your tasks</p>
+          </div>
+          <label class="custom-toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div id="security-panel" class="settings-view-panel">
+      <div class="view-panel-header">
+        <h2>Security Settings</h2>
+        <p>Manage your password and security preferences</p>
+      </div>
+      <form onsubmit="event.preventDefault();">
+        <div class="form-field-group">
+          <label>Current Password</label>
+          <input type="password" placeholder="">
+        </div>
+        <div class="form-field-group">
+          <label>New Password</label>
+          <input type="password" placeholder="">
+        </div>
+        <div class="form-field-group">
+          <label>Confirm Password</label>
+          <input type="password" placeholder="">
+        </div>
+        
+        <div class="inline-security-row">
+          <div class="toggle-item-info">
+            <h3>Two-Factor Authentication</h3>
+            <p>Add an extra layer of security</p>
+          </div>
+          <button type="button" class="action-btn btn-secondary btn-small">Enable</button>
+        </div>
+
+        <div class="form-actions-area no-border">
+          <button type="submit" class="action-btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="language-panel" class="settings-view-panel">
+      <div class="view-panel-header">
+        <h2>Language & Region</h2>
+        <p>Set your language and regional preferences</p>
+      </div>
+      <form onsubmit="event.preventDefault();">
+        <div class="form-field-group">
+          <label>Language</label>
+          <input type="text" value="English (US)">
+        </div>
+        <div class="form-field-group">
+          <label>Timezone</label>
+          <input type="text" value="Pacific Time (PT)">
+        </div>
+        <div class="form-field-group">
+          <label>Date Format</label>
+          <input type="text" value="MM/DD/YYYY">
+        </div>
+        <div class="form-actions-area">
+          <button type="submit" class="action-btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function switchSettingsTab(event, panelId) {
+    const panels = document.querySelectorAll('.settings-view-panel');
+    panels.forEach(p => p.classList.remove('active'));
+
+    const tabs = document.querySelectorAll('.tab-item-btn');
+    tabs.forEach(t => t.classList.remove('active'));
+
+    document.getElementById(panelId).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>
         </div>
       </main>
     </div>
