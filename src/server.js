@@ -22,7 +22,6 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 // ... existing app usage
-app.use('/api/tasks', taskRoutes);
 // ... other requires
 app.use('/api/tasks', taskRoutes);
 
