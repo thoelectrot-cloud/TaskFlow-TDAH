@@ -28,27 +28,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
  // 2. SUB-PAGES ROUTER SUB-SYSTEM LOGIC (DESKTOP + MOBILE SUPPORT)//
-// Hada hwa l-sotr li tay-khlli l-icons kamlin i-khdmo
+
 const navigationMenuItems = document.querySelectorAll('.sidebar-nav-item-link, .figma-nav-item');
 const viewspaceRoutedPanels = document.querySelectorAll('.workspace-routed-view-panel-node');
 
 navigationMenuItems.forEach(menuItem => {
     menuItem.addEventListener('click', (e) => {
-        // Hada tay-mne3 l-link i-dir refresh (default browser behavior)
+    
         e.preventDefault(); 
         
-        // Hna tay-jib l-id (b7al kanban-workflow-panel)
+      
         const navigationTargetId = menuItem.getAttribute('data-navigation-target');
         if (!navigationTargetId) return;
 
-        // I-mseh "active" mn ga3 l-icons o l-panels
+      
         navigationMenuItems.forEach(item => item.classList.remove('active'));
         viewspaceRoutedPanels.forEach(panel => panel.classList.remove('active'));
 
-        // I-zid "active" l-icon li clickiti 3liha
+      
         menuItem.classList.add('active');
         
-        // I-biyen l-panel li 3ndha nafs l-id
+      
         const targetPanelNode = document.getElementById(navigationTargetId);
         if (targetPanelNode) {
             targetPanelNode.classList.add('active');
