@@ -230,4 +230,5 @@ navigationMenuItems.forEach(menuItem => {
             console.log("System Theme Status: Parameter Shift Registered.");
         });
     }
+
 });
