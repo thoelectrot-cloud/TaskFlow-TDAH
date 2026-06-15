@@ -1896,9 +1896,28 @@ body.dark-mode-activated .segmented-reminder-strip-buttons-mesh {
   margin-bottom: 24px;
 }
 
+/*EXTENSIONS FOR SIGN UP CARD TOGGLE & FIGMA HINTS */
+.auth-view-hidden {
+    display: none !important;
+}
+.password-requirement-hint-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 4px;
+}
+.password-lime-hint-text {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--lime-brand-darker-text, #8fa438);
+}
 
-
-
-
-
-
+/* login-link back */
+.active-lime-link {
+    color: var(--lime-brand-darker-text, #8fa438) !important;
+    text-decoration: none;
+    font-weight: 700;
+}
+.active-lime-link:hover {
+    text-decoration: underline;
+}

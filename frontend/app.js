@@ -228,3 +228,25 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+// auto change between sign in and sign up cards without page reloading //
+const signInCard = document.getElementById("auth-signin-card");
+const signUpCard = document.getElementById("auth-signup-card");
+const signUpTrigger = document.querySelector(".inline-register-trigger");
+const signInTrigger = document.querySelector(".inline-login-trigger");
+
+if (signUpTrigger && signInTrigger && signInCard && signUpCard) {
+    
+    signUpTrigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        signInCard.classList.add("auth-view-hidden");
+        signUpCard.classList.remove("auth-view-hidden");
+    });
+
+    signInTrigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        signUpCard.classList.add("auth-view-hidden");
+        signInCard.classList.remove("auth-view-hidden");
+    });
+}
