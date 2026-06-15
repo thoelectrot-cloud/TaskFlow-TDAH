@@ -72,7 +72,7 @@
           </div>
           <!-- sign up -->
           <button type="submit" class="btn-primary-lime-submit">
-            <span>Sign In</span>
+            <span>Log In</span>
             <i
               class="fa-solid fa-right-to-bracket-icon fa-bars-progress"
               style="font-size: 0.9rem; margin-left: 4px"
@@ -85,11 +85,30 @@
         </div>
 
         <div class="auth-social-row-grid">
-          <button type="button" class="btn-social-outline-card">
+          <button
+            type="button"
+            class="btn-social-outline-card"
+            onclick="
+              event.preventDefault();
+              alert(
+                'La connexion OAuth est maquettée pour le design, mais désactivée pour cette démo scolaire.',
+              );
+            "
+          >
             <i class="fa-brands fa-google"></i>
             <span>Google</span>
           </button>
-          <button type="button" class="btn-social-outline-card">
+
+          <button
+            type="button"
+            class="btn-social-outline-card"
+            onclick="
+              event.preventDefault();
+              alert(
+                'La connexion OAuth est maquettée pour le design, mais désactivée pour cette démo scolaire.',
+              );
+            "
+          >
             <i class="fa-brands fa-apple"></i>
             <span>Apple</span>
           </button>
