@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const pool = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,7 +13,7 @@ app.use(express.json());
 
 // This line is the bridge! 
 app.use('/api/auth', authRoutes);
-
+app.use('/api/tasks', taskRoutes);
 app.get('/api/health', async (req, res) => {
     try {
         await pool.query('SELECT 1');

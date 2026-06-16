@@ -16,9 +16,10 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
+  <!-- login  -->
   <body>
     <div class="login-screen-wrapper" id="login-viewport-wall">
-      <div class="login-card">
+      <div class="login-card" id="auth-signin-card">
         <div class="login-brand-header">
           <div class="taskflow-logo-asset">
             <span class="pill-top"></span>
@@ -69,7 +70,7 @@
               </button>
             </div>
           </div>
-
+          <!-- sign up -->
           <button type="submit" class="btn-primary-lime-submit">
             <span>Log In</span>
             <i
@@ -118,14 +119,123 @@
             Don't have an account?
             <a href="#" class="inline-register-trigger">Sign Up</a>
           </p>
-          <div class="footer-decorative-logos-row">
-            <i class="fa-solid fa-chart-simple"></i>
-            <i class="fa-solid fa-window-maximize"></i>
-            <i class="fa-regular fa-calendar"></i>
+        </div>
+      </div>
+
+      <div class="login-card auth-view-hidden" id="auth-signup-card">
+        <div class="login-brand-header">
+          <div class="taskflow-logo-asset">
+            <span class="pill-top"></span>
+            <span class="pill-mid"></span>
+            <span class="dot-bot"></span>
           </div>
+          <h1 class="brand-title">TaskFlow</h1>
+        </div>
+
+        <div class="login-headline-group">
+          <h2>Create Your Account</h2>
+          <p>Start managing your workflow in seconds.</p>
+        </div>
+
+        <form id="app-register-form">
+          <div class="form-input-field-group">
+            <label for="reg-fullname">Full Name</label>
+            <div class="input-icon-frame">
+              <i class="fa-regular fa-user field-prefix-icon"></i>
+              <input
+                type="text"
+                id="reg-fullname"
+                placeholder="Enter your Full Name"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-input-field-group">
+            <label for="reg-email">Email Address</label>
+            <div class="input-icon-frame">
+              <i class="fa-regular fa-envelope field-prefix-icon"></i>
+              <input
+                type="email"
+                id="reg-email"
+                placeholder="name@company.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-input-field-group">
+            <label for="reg-password">Password</label>
+            <div class="input-icon-frame">
+              <i class="fa-solid fa-lock field-prefix-icon"></i>
+              <input
+                type="password"
+                id="reg-password"
+                placeholder="Enter your password"
+                required
+              />
+              <button type="button" class="password-eye-visibility-toggle">
+                <i class="fa-regular fa-eye-slash"></i>
+              </button>
+            </div>
+            <div class="password-requirement-hint-wrapper">
+              <span class="password-lime-hint-text"
+                >Require a strong password</span
+              >
+            </div>
+          </div>
+
+          <div class="form-input-field-group">
+            <label for="reg-confirm-password">Confirm Password</label>
+            <div class="input-icon-frame">
+              <i class="fa-solid fa-lock field-prefix-icon"></i>
+              <input
+                type="password"
+                id="reg-confirm-password"
+                placeholder="Re-enter your password"
+                required
+              />
+              <button type="button" class="password-eye-visibility-toggle">
+                <i class="fa-regular fa-eye-slash"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary-lime-submit">
+            <span>Create Account</span>
+            <i
+              class="fa-solid fa-user-plus"
+              style="font-size: 0.9rem; margin-left: 4px"
+            ></i>
+          </button>
+        </form>
+
+        <div class="auth-center-divider">
+          <span>OR CONTINUE WITH</span>
+        </div>
+
+        <div class="auth-social-row-grid">
+          <button type="button" class="btn-social-outline-card">
+            <i class="fa-brands fa-google"></i>
+            <span>Google</span>
+          </button>
+          <button type="button" class="btn-social-outline-card">
+            <i class="fa-brands fa-apple"></i>
+            <span>Apple</span>
+          </button>
+        </div>
+
+        <div class="auth-card-footer-layout">
+          <p>
+            Already have an account?
+            <a href="#" class="inline-login-trigger active-lime-link"
+              >Sign In</a
+            >
+          </p>
         </div>
       </div>
     </div>
+    <!-- end -->
 
     <div
       class="dashboard-application-matrix hidden"

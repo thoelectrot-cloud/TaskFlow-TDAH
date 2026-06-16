@@ -1,70 +1,34 @@
-/* TaskFlow Application Complete Matrix Framework Engine*/
+/* TaskFlow Application Complete Matrix Framework Engine */
 window.addEventListener("DOMContentLoaded", () => {
-  //  GLOBAL AVATAR DATABASE //
+  // 1. GLOBAL AVATAR DATABASE //
   const avatarDatabase = {
-    Ayoub:
-      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100",
+    Ayoub: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100",
     Taha: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100",
-    Hamza:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100",
+    Hamza: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100",
     Doha: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100",
   };
 
-  //  DOM CORE HOOK ATTACHMENTS//
+  // 2. DOM CORE HOOK ATTACHMENTS //
   const loginViewportWall = document.getElementById("login-viewport-wall");
-  const mainApplicationWorkspace = document.getElementById(
-    "main-application-workspace",
-  );
+  const mainApplicationWorkspace = document.getElementById("main-application-workspace");
   const appAuthForm = document.getElementById("app-auth-form");
+  const appRegisterForm = document.getElementById("app-register-form");
 
   const passwordInput = document.getElementById("auth-password");
-  const passwordVisibilityTrigger = document.getElementById(
-    "password-visibility-trigger",
-  );
-  const logoutInteractiveAnchor = document.getElementById(
-    "logout-interactive-anchor",
-  );
+  const passwordVisibilityTrigger = document.getElementById("password-visibility-trigger");
+  const logoutInteractiveAnchor = document.getElementById("logout-interactive-anchor");
   const darkmodeSwitchNode = document.getElementById("darkmode-switch-node");
 
-  // Modals Containers Mapping Nodes
+  // Modals
   const modalAddTask = document.getElementById("modal-container-add-task");
   const modalAddEvent = document.getElementById("modal-container-add-event");
   const formAddTask = document.getElementById("form-submit-node-add-task");
   const formAddEvent = document.getElementById("form-submit-node-add-event");
 
-  // 2. SUB-PAGES ROUTER SUB-SYSTEM LOGIC (DESKTOP + MOBILE SUPPORT)//
+  const signInCard = document.getElementById("auth-signin-card");
+  const signUpCard = document.getElementById("auth-signup-card");
 
-  const navigationMenuItems = document.querySelectorAll(
-    ".sidebar-nav-item-link, .figma-nav-item",
-  );
-  const viewspaceRoutedPanels = document.querySelectorAll(
-    ".workspace-routed-view-panel-node",
-  );
-
-  navigationMenuItems.forEach((menuItem) => {
-    menuItem.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      const navigationTargetId = menuItem.getAttribute(
-        "data-navigation-target",
-      );
-      if (!navigationTargetId) return;
-
-      navigationMenuItems.forEach((item) => item.classList.remove("active"));
-      viewspaceRoutedPanels.forEach((panel) =>
-        panel.classList.remove("active"),
-      );
-
-      menuItem.classList.add("active");
-
-      const targetPanelNode = document.getElementById(navigationTargetId);
-      if (targetPanelNode) {
-        targetPanelNode.classList.add("active");
-      }
-    });
-  });
-
-  // 3. SECURE AUTH VISUAL BYPASS ROUTER MECHANISM (FIXED MAIN AVATAR)//
+  // 3. SECURE AUTH VISUAL BYPASS ROUTER MECHANISM //
   if (passwordVisibilityTrigger && passwordInput) {
     passwordVisibilityTrigger.addEventListener("click", (e) => {
       e.preventDefault();
@@ -78,170 +42,201 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ==========================================
+  // REAL BACK-END LOGIN (SIGN IN)
+  // ==========================================
   if (appAuthForm) {
-    appAuthForm.addEventListener("submit", (e) => {
+    appAuthForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Extraction d l-ism dynamic
-      const userInputField =
-        appAuthForm.querySelector('input[type="text"]') ||
-        appAuthForm.querySelector('input[type="email"]');
-      const nameElement = document.querySelector(".u-name");
-      const roleElement = document.querySelector(".u-role");
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value;
 
-      if (userInputField && userInputField.value.trim() !== "") {
-        let rawValue = userInputField.value.trim();
-        let cleanName = rawValue.split("@")[0];
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
 
-        // Capitalize (ayoub -> Ayoub)
-        cleanName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+        const data = await response.json();
 
-        // Injection fl-HTML
-        if (nameElement) nameElement.innerText = cleanName;
+        if (response.ok) {
+          // Save the token!
+          localStorage.setItem('taskflow_token', data.token);
 
-        // 🌟 FIX: Changer la photo d'avatar principale (Header / Sidebar)
-        if (nameElement) {
-          const mainProfileImg = nameElement.parentElement.querySelector("img");
-          if (mainProfileImg) {
-            const profileAvatarUrl =
-              avatarDatabase[cleanName] ||
-              `https://ui-avatars.com/api/?name=${encodeURIComponent(cleanName)}&background=random&color=fff&bold=true`;
-            mainProfileImg.src = profileAvatarUrl;
+          // Update UI Profile Name
+          let cleanName = email.split("@")[0];
+          cleanName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+          
+          const nameElement = document.querySelector(".u-name");
+          const roleElement = document.querySelector(".u-role");
+
+          if (nameElement) {
+            nameElement.innerText = cleanName;
+            const mainProfileImg = nameElement.parentElement.querySelector("img");
+            if (mainProfileImg) {
+              const profileAvatarUrl = avatarDatabase[cleanName] || `https://ui-avatars.com/api/?name=${encodeURIComponent(cleanName)}&background=random&color=fff&bold=true`;
+              mainProfileImg.src = profileAvatarUrl;
+            }
           }
-        }
 
-        // Changement d l-role otomatik
-        if (roleElement) {
-          if (cleanName.toLowerCase() === "doha") {
-            roleElement.innerText = "UX/UI Designer";
-          } else {
-            roleElement.innerText = "Front-end Developer";
+          if (roleElement) {
+            roleElement.innerText = cleanName.toLowerCase() === "doha" ? "UX/UI Designer" : "Front-end Developer";
           }
+
+          // Switch to workspace
+          if (loginViewportWall) loginViewportWall.classList.add("hidden");
+          if (mainApplicationWorkspace) mainApplicationWorkspace.classList.remove("hidden");
+          
+        } else {
+          alert(`Login Failed: ${data.error}`);
         }
+      } catch (err) {
+        console.error("Connection error:", err);
+        alert("Failed to connect to the server. Is the backend running?");
       }
-
-      // Switch view layers flawlessly
-      loginViewportWall.classList.add("hidden");
-      mainApplicationWorkspace.classList.remove("hidden");
     });
   }
 
+  // ==========================================
+  // REAL BACK-END REGISTRATION (SIGN UP)
+  // ==========================================
+  if (appRegisterForm) {
+    appRegisterForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const confirmPassword = document.getElementById("reg-confirm-password").value;
+
+      if (password !== confirmPassword) {
+        return alert("Passwords do not match!");
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Account created successfully! Please log in.');
+          // Switch to Login Card
+          signUpCard.classList.add("auth-view-hidden");
+          signInCard.classList.remove("auth-view-hidden");
+          appRegisterForm.reset();
+        } else {
+          alert(`Registration Error: ${data.error}`);
+        }
+      } catch (err) {
+        console.error("Connection error:", err);
+        alert("Failed to connect to the server.");
+      }
+    });
+  }
+
+  // 4. LOGOUT LOGIC //
   if (logoutInteractiveAnchor) {
     logoutInteractiveAnchor.addEventListener("click", (e) => {
       e.preventDefault();
+      
+      // Clear token
+      localStorage.removeItem('taskflow_token');
 
-      // Return variables arrays settings flags cleanly back to defaults
-      mainApplicationWorkspace.classList.add("hidden");
-      loginViewportWall.classList.remove("hidden");
+      if (mainApplicationWorkspace) mainApplicationWorkspace.classList.add("hidden");
+      if (loginViewportWall) loginViewportWall.classList.remove("hidden");
 
       if (appAuthForm) appAuthForm.reset();
       if (passwordInput) passwordInput.type = "password";
-      if (passwordVisibilityTrigger)
-        passwordVisibilityTrigger.innerHTML = `<i class="fa-regular fa-eye-slash"></i>`;
+      if (passwordVisibilityTrigger) passwordVisibilityTrigger.innerHTML = `<i class="fa-regular fa-eye-slash"></i>`;
     });
   }
 
-  // 4. SYSTEM DIALOG WINDOWS EVENT INTERPOLATION//
-  const openAddTaskTriggers = document.querySelectorAll(
-    ".global-add-task-modal-trigger",
-  );
-  const openAddEventTriggers = document.querySelectorAll(
-    ".global-add-event-modal-trigger",
-  );
-  const generalModalDismissalElements = document.querySelectorAll(
-    ".modal-close-trigger-node",
-  );
+  // 5. SUB-PAGES ROUTER //
+  const navigationMenuItems = document.querySelectorAll(".sidebar-nav-item-link, .figma-nav-item");
+  const viewspaceRoutedPanels = document.querySelectorAll(".workspace-routed-view-panel-node");
 
-  openAddTaskTriggers.forEach((btnTrigger) => {
-    btnTrigger.addEventListener("click", () =>
-      modalAddTask.classList.remove("hidden"),
-    );
+  navigationMenuItems.forEach((menuItem) => {
+    menuItem.addEventListener("click", (e) => {
+      e.preventDefault();
+      const navigationTargetId = menuItem.getAttribute("data-navigation-target");
+      if (!navigationTargetId) return;
+
+      navigationMenuItems.forEach((item) => item.classList.remove("active"));
+      viewspaceRoutedPanels.forEach((panel) => panel.classList.remove("active"));
+
+      menuItem.classList.add("active");
+      const targetPanelNode = document.getElementById(navigationTargetId);
+      if (targetPanelNode) targetPanelNode.classList.add("active");
+    });
   });
 
-  openAddEventTriggers.forEach((btnTrigger) => {
-    btnTrigger.addEventListener("click", () =>
-      modalAddEvent.classList.remove("hidden"),
-    );
-  });
+  // 6. SYSTEM DIALOG WINDOWS //
+  const openAddTaskTriggers = document.querySelectorAll(".global-add-task-modal-trigger");
+  const openAddEventTriggers = document.querySelectorAll(".global-add-event-modal-trigger");
+  const generalModalDismissalElements = document.querySelectorAll(".modal-close-trigger-node");
 
-  generalModalDismissalElements.forEach((dismissalBtn) => {
-    dismissalBtn.addEventListener("click", (e) => {
-      if (e.target === dismissalBtn || dismissalBtn.contains(e.target)) {
-        modalAddTask.classList.add("hidden");
-        modalAddEvent.classList.add("hidden");
+  openAddTaskTriggers.forEach((btn) => btn.addEventListener("click", () => modalAddTask && modalAddTask.classList.remove("hidden")));
+  openAddEventTriggers.forEach((btn) => btn.addEventListener("click", () => modalAddEvent && modalAddEvent.classList.remove("hidden")));
+
+  generalModalDismissalElements.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      if (e.target === btn || btn.contains(e.target)) {
+        if (modalAddTask) modalAddTask.classList.add("hidden");
+        if (modalAddEvent) modalAddEvent.classList.add("hidden");
       }
     });
   });
 
-  // Close overlays securely by backdrop clicking processes
   [modalAddTask, modalAddEvent].forEach((modalBoxOverlay) => {
-    modalBoxOverlay.addEventListener("click", (e) => {
-      if (e.target === modalBoxOverlay) {
-        modalBoxOverlay.classList.add("hidden");
-      }
-    });
+    if (modalBoxOverlay) {
+      modalBoxOverlay.addEventListener("click", (e) => {
+        if (e.target === modalBoxOverlay) modalBoxOverlay.classList.add("hidden");
+      });
+    }
   });
 
-  // 5. DATA INGESTION CRUD FORM SIMULATION HANDLERS//
+  // 7. TASK & EVENT FORMS //
   if (formAddTask) {
     formAddTask.addEventListener("submit", (e) => {
       e.preventDefault();
-
       const taskTitleValue = document.getElementById("task-title-input").value;
+      const currentSessionUser = document.querySelector(".u-name") ? document.querySelector(".u-name").innerText : "User";
+      const taskAssigneeValue = document.getElementById("task-assignee-select").value || currentSessionUser;
+      const finalAvatarUrl = avatarDatabase[taskAssigneeValue] || `https://ui-avatars.com/api/?name=${encodeURIComponent(taskAssigneeValue)}&background=random&color=fff&bold=true`;
 
-      const currentSessionUser = document.querySelector(".u-name")
-        ? document.querySelector(".u-name").innerText
-        : "User";
-      const taskAssigneeValue =
-        document.getElementById("task-assignee-select").value ||
-        currentSessionUser;
-
-      // avtar generation
-      const finalAvatarUrl =
-        avatarDatabase[taskAssigneeValue] ||
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(taskAssigneeValue)}&background=random&color=fff&bold=true`;
-
-      // Programmatically construct high fidelity functional Kanban layout node inside DOM structure
       const newCardItemHtmlTemplate = `
-                <div class="kanban-task-card-item">
-                    <div class="card-tag-wrapper ux-ui">Task</div>
-                    <h3 class="card-task-title-text">${taskTitleValue}</h3>
-                    <div class="card-footer-assignment-meta-row">
-                        <div class="assignee-identity-badge">
-                            <img src="${finalAvatarUrl}" alt="${taskAssigneeValue}">
-                            <span>${taskAssigneeValue}</span>
-                        </div>
-                        <span class="card-timestamp-date">Today</span>
-                    </div>
+        <div class="kanban-task-card-item">
+            <div class="card-tag-wrapper ux-ui">Task</div>
+            <h3 class="card-task-title-text">${taskTitleValue}</h3>
+            <div class="card-footer-assignment-meta-row">
+                <div class="assignee-identity-badge">
+                    <img src="${finalAvatarUrl}" alt="${taskAssigneeValue}">
+                    <span>${taskAssigneeValue}</span>
                 </div>
-            `;
+                <span class="card-timestamp-date">Today</span>
+            </div>
+        </div>
+      `;
 
-      const targetTodoStackDropzone =
-        document.getElementById("stack-todo-cards");
-      if (targetTodoStackDropzone) {
-        targetTodoStackDropzone.insertAdjacentHTML(
-          "beforeend",
-          newCardItemHtmlTemplate,
-        );
-      }
+      const targetTodoStackDropzone = document.getElementById("stack-todo-cards");
+      if (targetTodoStackDropzone) targetTodoStackDropzone.insertAdjacentHTML("beforeend", newCardItemHtmlTemplate);
 
-      // Clear workflow modal variables settings states tracking values cleanly
       formAddTask.reset();
-      modalAddTask.classList.add("hidden");
+      if (modalAddTask) modalAddTask.classList.add("hidden");
     });
   }
 
   if (formAddEvent) {
     formAddEvent.addEventListener("submit", (e) => {
       e.preventDefault();
-
-      const eventTitleValue =
-        document.getElementById("event-title-input").value;
-
-      // Auto inject dynamic notification item box inside Today calendar highlight target
-      const targetCalendarContainerTodayCell = document.querySelector(
-        ".date-cell.active-current-today-highlight-box",
-      );
+      const eventTitleValue = document.getElementById("event-title-input").value;
+      const targetCalendarContainerTodayCell = document.querySelector(".date-cell.active-current-today-highlight-box");
+      
       if (targetCalendarContainerTodayCell) {
         const dynamicPillNodeElement = document.createElement("div");
         dynamicPillNodeElement.className = "calendar-event-pill event-purple";
@@ -250,54 +245,32 @@ window.addEventListener("DOMContentLoaded", () => {
       }
 
       formAddEvent.reset();
-      modalAddEvent.classList.add("hidden");
+      if (modalAddEvent) modalAddEvent.classList.add("hidden");
     });
   }
 
-  // 6. CENTRAL THEME TOGGLE (DARK MODE MATRIX OVERRIDES) //
+  // 8. THEME TOGGLE //
   if (darkmodeSwitchNode) {
     darkmodeSwitchNode.addEventListener("click", () => {
       document.body.classList.toggle("dark-mode-activated");
-      console.log("System Theme Status: Parameter Shift Registered.");
+    });
+  }
+
+  // 9. SIGN IN / SIGN UP CARD SWITCHER //
+  const signUpTrigger = document.querySelector(".inline-register-trigger");
+  const signInTrigger = document.querySelector(".inline-login-trigger");
+
+  if (signUpTrigger && signInTrigger && signInCard && signUpCard) {
+    signUpTrigger.addEventListener("click", (e) => {
+      e.preventDefault();
+      signInCard.classList.add("auth-view-hidden");
+      signUpCard.classList.remove("auth-view-hidden");
+    });
+
+    signInTrigger.addEventListener("click", (e) => {
+      e.preventDefault();
+      signUpCard.classList.add("auth-view-hidden");
+      signInCard.classList.remove("auth-view-hidden");
     });
   }
 });
-
-// 1. Grab the exact ID of your form
-    document.getElementById('app-auth-form').addEventListener('submit', async function(e) {
-        // This stops the default bypass
-        e.preventDefault(); 
-
-        // 2. Grab the exact IDs of your inputs
-        let emailInput = document.getElementById('auth-email').value;
-        let passwordInput = document.getElementById('auth-password').value;
-
-        try {
-            // 3. Send the data to your Node.js backend
-            let response = await fetch('http://localhost:3000/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: emailInput, password: passwordInput })
-            });
-
-            // 4. Read the answer from the server
-            let data = await response.json();
-
-            if (response.ok) {
-                // Success! Save the token.
-                localStorage.setItem('token', data.token);
-                
-                // Redirect to the dashboard. (Change 'dashboard.html' if your page has a different name)
-                window.location.href = '/dashboard.html'; 
-            } else {
-                // Backend rejected the fake credentials
-                alert("Erreur de connexion : " + data.error);
-            }
-
-        } catch (error) {
-            console.error('Fetch error:', error);
-            alert("Le serveur ne répond pas. Vérifie que le backend est lancé.");
-        }
-    });
