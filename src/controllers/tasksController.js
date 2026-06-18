@@ -10,10 +10,14 @@ const getTasks = async (req, res) => {
 };
 
 const addTask = async (req, res) => {
-    const { title, description } = req.body;
+    const { title, description, assignee } = req.body; // Capture the name
     try {
-        const [result] = await pool.query('INSERT INTO tasks (user_id, title, description) VALUES (?, ?, ?)', [req.userId, title, description]);
-        res.status(201).json({ id: result.insertId, title, description, status: 'pending' });
+        // Save the name into the assignee column
+        const [result] = await pool.query(
+            'INSERT INTO tasks (user_id, title, description, assignee) VALUES (?, ?, ?, ?)', 
+            [req.userId, title, description, assignee]
+        );
+        res.status(201).json({ id: result.insertId, title, description, assignee });
     } catch (error) {
         res.status(500).json({ error: 'Failed to add task' });
     }
