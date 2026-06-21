@@ -81,11 +81,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
           if (loginViewportWall) loginViewportWall.classList.add("hidden");
           if (mainApplicationWorkspace) mainApplicationWorkspace.classList.remove("hidden");
+          
+          loadTasks();
+          loadProfile();
         } else {
           alert(`Login Failed: ${data.error}`);
         }
       } catch (err) {
-        console.error("Connection error:", err);
         alert("Failed to connect to the server.");
       }
     });
@@ -190,39 +192,114 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 4. SETTINGS ENGINE (PROFILE SAVE)
+  // 4. SETTINGS ENGINE (PROFILE & NOTIFICATIONS)
   // ==========================================
   const profilePanel = document.getElementById("profile-panel");
   if (profilePanel) {
-    const saveProfileBtn = profilePanel.querySelector(".form-actions-area button:last-child");
+    const buttons = profilePanel.querySelectorAll("button");
+    let saveProfileBtn = null;
+    buttons.forEach(btn => { if (btn.innerText.includes("Save")) saveProfileBtn = btn; });
+
     if (saveProfileBtn) {
         saveProfileBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             const inputs = profilePanel.querySelectorAll("input");
             const token = localStorage.getItem("taskflow_token");
+            if (!token) return alert("ERROR: No login token found.");
+
             try {
+                const payload = { 
+                    first_name: inputs[0] ? inputs[0].value : "", 
+                    last_name: inputs[1] ? inputs[1].value : "", 
+                    email: inputs[2] ? inputs[2].value : "", 
+                    bio: inputs[3] ? inputs[3].value : "" 
+                };
+
                 const response = await fetch("http://localhost:3000/api/profile", {
                     method: "PUT",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}` 
-                    },
-                    body: JSON.stringify({ 
-                        first_name: inputs[0].value, 
-                        last_name: inputs[1].value, 
-                        bio: inputs[3].value 
-                    })
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify(payload)
                 });
-                if (response.ok) alert("Settings saved successfully!");
+
+                if (response.ok) {
+                    alert("Settings saved successfully!");
+                } else {
+                    const errorData = await response.json();
+                    alert("SERVER REJECTED SAVE: " + (errorData.error || "Unknown error"));
+                }
             } catch (err) {
-                console.error("Save settings error:", err);
+                alert("NETWORK CRASH: Is your Node server running?");
             }
         });
     }
   }
 
+  const notificationsPanel = document.getElementById("notifications-panel");
+  if (notificationsPanel) {
+      const toggleSwitches = notificationsPanel.querySelectorAll("input[type='checkbox']");
+      toggleSwitches.forEach(toggle => {
+          toggle.addEventListener("change", async () => {
+              const token = localStorage.getItem("taskflow_token");
+              if (!token) return;
+
+              const payload = {
+                  email_notifications: toggleSwitches[0] ? toggleSwitches[0].checked : false,
+                  push_notifications: toggleSwitches[1] ? toggleSwitches[1].checked : false,
+                  task_reminders: toggleSwitches[2] ? toggleSwitches[2].checked : false,
+                  weekly_digest: toggleSwitches[3] ? toggleSwitches[3].checked : false
+              };
+
+              try {
+                  await fetch("http://localhost:3000/api/notifications", {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                      body: JSON.stringify(payload)
+                  });
+              } catch (err) {
+                  console.error("Failed to auto-save notifications:", err);
+              }
+          });
+      });
+  }
+
+  async function loadProfile() {
+      const token = localStorage.getItem("taskflow_token");
+      if (!token) return;
+
+      try {
+          const response = await fetch("http://localhost:3000/api/profile", {
+              method: "GET",
+              headers: { "Authorization": `Bearer ${token}` }
+          });
+
+          if (response.ok) {
+              const data = await response.json();
+              
+              if (profilePanel) {
+                  const inputs = profilePanel.querySelectorAll("input");
+                  if (inputs[0]) inputs[0].value = data.first_name || "";
+                  if (inputs[1]) inputs[1].value = data.last_name || "";
+                  if (inputs[2]) inputs[2].value = data.email || ""; 
+                  if (inputs[3]) inputs[3].value = data.bio || "";
+              }
+
+              if (notificationsPanel) {
+                  const toggles = notificationsPanel.querySelectorAll("input[type='checkbox']");
+                  if (toggles[0]) toggles[0].checked = !!data.email_notifications;
+                  if (toggles[1]) toggles[1].checked = !!data.push_notifications;
+                  if (toggles[2]) toggles[2].checked = !!data.task_reminders;
+                  if (toggles[3]) toggles[3].checked = !!data.weekly_digest;
+              }
+          }
+      } catch (err) {
+          console.error("Failed to load profile:", err);
+      }
+  }
+
+  loadProfile();
+
   // ==========================================
-  // 5. KANBAN ENGINE (LOAD, ADD, & DRAG/DROP)
+  // 5. KANBAN ENGINE (LOAD, ADD, DRAG/DROP, & DELETE)
   // ==========================================
   
   // A. Load Tasks
@@ -239,25 +316,30 @@ window.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         const tasks = await response.json();
 
-        // 1. Grab all columns (Fixing the ID mismatch)
         const todoStack = document.getElementById("stack-todo-cards");
         const progressStack = document.getElementById("stack-in-progress-cards") || document.getElementById("stack-inprogress-cards");
         const doneStack = document.getElementById("stack-done-cards");
 
-        // 2. Clear out old HTML to stop duplicates
         if (todoStack) todoStack.innerHTML = "";
         if (progressStack) progressStack.innerHTML = "";
         if (doneStack) doneStack.innerHTML = "";
 
-        const getAvatarUrl = (name) => `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff&bold=true`;
+        // 🔥 SMART AVATAR LOGIC
+        const getAvatarUrl = (name) => {
+            return avatarDatabase[name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff&bold=true`;
+        };
         const currentSessionUser = document.querySelector(".u-name") ? document.querySelector(".u-name").innerText : "User";
 
-        // 3. Render Cards
         tasks.forEach((task) => {
+          // Grabs the name from the DB (e.g., "Ayoub"), or defaults to the logged-in user
           const assigneeName = task.assignee || currentSessionUser;
+          
           const taskHtml = `
             <div class="kanban-task-card-item" data-id="${task.id}" draggable="true">
-                <div class="card-tag-wrapper ux-ui">Task</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="card-tag-wrapper ux-ui">Task</div>
+                    <button class="delete-task-btn" title="Delete Task" style="background: none; border: none; font-size: 14px; cursor: pointer; opacity: 0.4; transition: 0.2s;" onmouseover="this.style.opacity='1'; this.style.transform='scale(1.1)';" onmouseout="this.style.opacity='0.4'; this.style.transform='scale(1)';">🗑️</button>
+                </div>
                 <h3 class="card-task-title-text">${task.title}</h3>
                 <div class="card-footer-assignment-meta-row">
                     <div class="assignee-identity-badge">
@@ -283,7 +365,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Load tasks immediately on startup
   loadTasks();
 
   // B. Add Task
@@ -292,8 +373,11 @@ window.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const title = document.getElementById("task-title-input").value;
       const description = "New task created";
-      const assigneeElement = document.getElementById("task-assignee-input");
+      
+      // 🔥 EXACT MATCH: Grabs the value directly from your <select id="task-assignee-select">
+      const assigneeElement = document.getElementById("task-assignee-select");
       const assignee = assigneeElement ? assigneeElement.value : "Taha";
+      
       const token = localStorage.getItem("taskflow_token");
 
       try {
@@ -309,7 +393,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           formAddTask.reset();
           if (modalAddTask) modalAddTask.classList.add("hidden");
-          loadTasks(); // Refreshes board instantly
+          loadTasks(); 
         }
       } catch (err) {
         console.error("Save error:", err);
@@ -317,10 +401,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // C. Drag and Drop Engine
+  // C. Drag & Drop
   let draggedCard = null;
 
-  // Grab the card securely
   document.addEventListener("dragstart", (e) => {
     const card = e.target.closest(".kanban-task-card-item");
     if (card) {
@@ -329,7 +412,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Let go of the card
   document.addEventListener("dragend", (e) => {
     const card = e.target.closest(".kanban-task-card-item");
     if (card) {
@@ -338,7 +420,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Setup the columns to catch the cards (Matching IDs)
   const kanbanColumns = [
     { element: document.getElementById("stack-todo-cards"), status: "pending" },
     { element: document.getElementById("stack-in-progress-cards") || document.getElementById("stack-inprogress-cards"), status: "in-progress" },
@@ -362,18 +443,14 @@ window.addEventListener("DOMContentLoaded", () => {
       col.element.style.background = "";
 
       if (draggedCard) {
-        col.element.appendChild(draggedCard); // Move visually
+        col.element.appendChild(draggedCard); 
         const taskId = draggedCard.getAttribute("data-id");
         const token = localStorage.getItem("taskflow_token");
 
         try {
-          // Save to DB
           await fetch(`http://localhost:3000/api/tasks/${taskId}/status`, {
             method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            },
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ status: col.status })
           });
         } catch(err) {
@@ -382,4 +459,118 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // D. Delete Task Engine
+  document.addEventListener("click", async (e) => {
+      const deleteBtn = e.target.closest(".delete-task-btn");
+      if (deleteBtn) {
+          const card = deleteBtn.closest(".kanban-task-card-item");
+          const taskId = card.getAttribute("data-id");
+          const token = localStorage.getItem("taskflow_token");
+
+          if (confirm("Are you sure you want to delete this task?")) {
+              try {
+                  card.style.opacity = "0.5"; 
+                  const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+                      method: "DELETE",
+                      headers: { "Authorization": `Bearer ${token}` }
+                  });
+
+                  if (response.ok) {
+                      card.remove(); 
+                  } else {
+                      card.style.opacity = "1";
+                      alert("Failed to delete task from server.");
+                  }
+              } catch (err) {
+                  console.error("Delete task error:", err);
+                  card.style.opacity = "1";
+              }
+          }
+      }
+  });
 });
+// 6. DASHBOARD METRICS ENGINE
+async function updateDashboardMetrics() {
+    const token = localStorage.getItem("taskflow_token");
+    if (!token) return;
+
+    try {
+        const response = await fetch("http://localhost:3000/api/tasks", { 
+            headers: { "Authorization": `Bearer ${token}` } 
+        });
+        const tasks = await response.json();
+
+        // 1. Calculate values
+        const active = tasks.filter(t => t.status === 'pending').length;
+        const inProgress = tasks.filter(t => t.status === 'in-progress').length;
+        const completed = tasks.filter(t => t.status === 'completed').length;
+        const today = new Date();
+        const overdue = tasks.filter(t => t.due_date && new Date(t.due_date) < today && t.status !== 'completed').length;
+
+        // 2. Map to your HTML classes
+        const values = document.querySelectorAll(".metric-count-value");
+        if (values.length >= 4) {
+            values[0].innerText = active;
+            values[1].innerText = inProgress;
+            values[2].innerText = completed;
+            values[3].innerText = overdue;
+        }
+
+        // 3. Greeting
+        const hour = new Date().getHours();
+        let timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
+        const greetingEl = document.querySelector(".dashboard-header p");
+        if (greetingEl) greetingEl.innerText = `Good ${timeOfDay}, ${document.querySelector(".u-name")?.innerText || 'User'} 👋`;
+
+    } catch (err) { console.error("Dashboard update failed:", err); }
+}
+
+// Ensure this runs when the page loads
+updateDashboardMetrics();
+async function renderDashboardTasks() {
+    const listContainer = document.querySelector(".dashboard-list-items-vertical-stack");
+    if (!listContainer) return;
+
+    const token = localStorage.getItem("taskflow_token");
+    if (!token) return;
+
+    try {
+        const response = await fetch("http://localhost:3000/api/tasks", { 
+            headers: { "Authorization": `Bearer ${token}` } 
+        });
+        const tasks = await response.json();
+        
+        // Filter only active tasks (limit to 5)
+        const activeTasks = tasks.filter(t => t.status !== 'completed').slice(0, 5);
+
+        listContainer.innerHTML = ""; // Wipe the static HTML placeholders
+
+        activeTasks.forEach(task => {
+            // Map category to your specific CSS class names
+            const categoryClass = {
+                "UX/UI": "ux-ui",
+                "Bug": "bug-tag",
+                "Meeting": "meeting-tag",
+                "Backend": "backend"
+            }[task.category] || "backend";
+
+            listContainer.insertAdjacentHTML("beforeend", `
+                <div class="list-row-task-item">
+                    <div class="list-item-left-content">
+                        <i class="fa-solid fa-list-check item-bullet-ico"></i>
+                        <span>${task.title}</span>
+                    </div>
+                    <div class="card-tag-wrapper ${categoryClass} text-scaled-down">
+                        ${task.category || 'General'}
+                    </div>
+                </div>
+            `);
+        });
+    } catch (err) {
+        console.error("Dashboard list render failed:", err);
+    }
+}
+
+// Call this inside your loadDashboard function!
+renderDashboardTasks();
